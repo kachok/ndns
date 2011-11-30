@@ -53,18 +53,15 @@ ndns.poller.client.startPoller('127.0.0.1', POLL_PORT, 'aiesec.in');
 
 dns_server.on("request", function(req, res) {
   res.setHeader(req.header);
-
   for (var i = 0; i < req.q.length; i++)
     res.addQuestion(req.q[i]);
-   //console.log(util.inspect(req.q)); 
   if (req.q.length > 0) {
     var name = req.q[0].name;
     if (name == ".")
       name = "";
-
     var root = getRR(name);
    	if(root) 
-	    createResponse(req, res, root)
+	    createResponse(req, res, root, p_type_syms)
 		else{
 			res.header.rcode = 0x8;
 			res.header.qr = 1;
@@ -77,7 +74,6 @@ dns_server.on("request", function(req, res) {
 		}
   }
   res.send();
-  //console.log("Response sent");
 });
 
 dns_server.bind(BIND_PORT);

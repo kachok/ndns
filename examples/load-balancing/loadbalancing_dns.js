@@ -15,7 +15,7 @@ var POLL_PORT = 5000;
 var zone = {}
 
 // All domain names should be in lower case
-addToTree(zone, ["in","aiesec"], 
+ndns.nameserver.addToTree(zone, ["in","aiesec"], 
                 { '*' : [ 
                           { name: 'aiesec.in', rr: 'SOA', ttl: '86400', dclass: 'IN', value: 'ns1.bluehost.com. root.box481.bluehost.com. 2011031102 86400 7200 3600000 300'},
                           { name: 'aiesec.in', rr: 'TXT', ttl: '14400', dclass: 'IN', value: 'v=spf1 a mx ptr include:bluehost.com ?all' },
@@ -26,7 +26,7 @@ addToTree(zone, ["in","aiesec"],
                           { name: 'ns1.bluehost.com.', rr: 'A', ttl: '14400', dclass: 'IN', value: '127.0.0.1' },
                           { name: 'ns2.bluehost.com.', rr: 'A', ttl: '14400', dclass: 'IN', value: '127.0.0.2' },
                         ] } );
-addToTree(zone, ["com","google"],
+ndns.nameserver.addToTree(zone, ["com","google"],
 								{ '*' : [
 													{ name: ['ns1.google.com',
                                    'ns2.google.com',
@@ -37,7 +37,7 @@ addToTree(zone, ["com","google"],
                                                                                                     '216.239.38.10'], index: 0, balance: 'rr' } 
 												]
 								} );									
-addToTree(zone, ["in","ac","lnmiit","proxy"], 
+ndns.nameserver.addToTree(zone, ["in","ac","lnmiit","proxy"], 
                 { '*' : [
                           { name: 'proxy.lnmiit.ac.in', rr:'A', ttl: '14400', dclass: 'IN', value: ['172.22.2.211','172.22.2.212'], index: 0, balance: 'rr' }
                         ] } );
@@ -59,9 +59,9 @@ dns_server.on("request", function(req, res) {
     var name = req.q[0].name;
     if (name == ".")
       name = "";
-    var root = getRR(name);
+    var root = ndns.namserver.getRR(name);
    	if(root) 
-	    createResponse(req, res, root, p_type_syms)
+	    ndns.nameserver.createResponse(req, res, root, p_type_syms)
 		else{
 			res.header.rcode = 0x8;
 			res.header.qr = 1;

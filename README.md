@@ -144,13 +144,13 @@ specification.
 It also runs an instance of `ndns.poller.server` and `ndns.poller.client` on localhost
 
 ### Zone files
-Zone files are presently hardcoded into the `ndns-nameserver.js` file in a variable called 'zone'.v
+Zone files are presently coded into the `loadbalancing-nameserver.js` file in a variable called 'zone'.v
 The Zone files are implemented using a tree structure and can be written to using addToTree(tree, branch, records ).
 All RR records are stored as an array under a `*` key in the final leaf of the domain tree.
 
 Example #1:
 	
-	addToTree(zone, ["in","aiesec"],
+	ndns.nameserver.addToTree(zone, ["in","aiesec"],
 	    { '*' : [
 	    { name: 'aiesec.in', rr: 'SOA', ttl: '86400', dclass: 'IN', value: 'ns1.bluehost.com. root.box481.bluehost.com. 2011031102 86400 7200 3600000 300'},
 	    { name: 'aiesec.in', rr: 'TXT', ttl: '14400', dclass: 'IN', value: 'v=spf1 a mx ptr include:bluehost.com ?all' },
@@ -169,14 +169,14 @@ The `name` key can also be a array to facilitate round robin load balancing betw
 
 Example #1 - Load balancing A records with a constant name:
 
-	addToTree(zone, ["ac","in","lnmiit","proxy"],
+	ndns.nameserver.addToTree(zone, ["ac","in","lnmiit","proxy"],
 	    { '*' : [
 	    { name: 'proxy.lnmiit.ac.in', rr: 'A', ttl: '14400', dclass: 'IN' value: ['172.22.2.211', '172.22.2.212'], index: 0, balance: 'rr' }
 	    ]});
 
 Example #2 - Load balancing NS records with different names:
 
-	addToTree(zone, ["com","google"],
+	ndns.nameserver.addToTree(zone, ["com","google"],
 	    { '*' : [
 	    { name: ['ns1.google.com',
 	    'ns2.google.com',
@@ -195,7 +195,7 @@ will default to round robin.
 
 Example #1:
 
-	addToTree(zone, ["in","aiesec"],
+	ndns.nameserver.addToTree(zone, ["in","aiesec"],
 	              { '*' : [
 	                        { name: 'aiesec.in', rr: 'SOA', ttl: '86400', dclass: 'IN', value: 'ns1.bluehost.com. root.box481.bluehost.com. 2011031102 86400 7200 3600000 300'},
 	                        { name: 'aiesec.in', rr: 'TXT', ttl: '14400', dclass: 'IN', value: 'v=spf1 a mx ptr include:bluehost.com ?all' },
@@ -209,6 +209,24 @@ Example #1:
 	                        { name: 'ns1.bluehost.com.', rr: 'A', ttl: '14400', dclass: 'IN', value: '127.0.0.1' },
 	                        { name: 'ns2.bluehost.com.', rr: 'A', ttl: '14400', dclass: 'IN', value: '127.0.0.2' },
 	                      ] } );
+
+
+## ndns.nameserver.getRR ( NAME )
+This function retieves RR records from the tree that was created previously to store the zone file.
+This returns a node in the tree of the zone file which can act as a root for the domain `name`.
+
+Example #1:
+
+	var root = ndns.nameserver.getRR (5000);
+
+
+## ndns.nameserver.createResponse ( REQ, RES, ROOT, P_TYPE_SYMS )
+This function creates a `DNS` reply, `RES` for a request `REQ` given the root node of the relevan part of the zone
+file is `ROOT`. The field `p_type_syms` generally refers to `ndns.p_type_syms`, but it can point to a user implementation as well.
+
+Example #1:
+
+	ndns.nameserver.createResponse (req, res, root, ndns.p_type_syms);
 
 
 ## ndns.poller.server.createServer ( POLL_PORT )

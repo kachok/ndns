@@ -136,9 +136,10 @@ Sets the question on the response
 
 # Load Balancing
 
-## ndns-nameserver.js
+## Running examples
+The example code for running a load-balancing DNS server can be found at `/example/load-balance`.
 
-This is a file containing an implementation of a basic DNS nameserver which listens
+The file `loadbalancing-dns.js` contains an implementation of a basic DNS nameserver which listens
 on port 53 and replies to DNS queries with DNS responses following the DNS protocol
 specification.
 It also runs an instance of `ndns.poller.server` and `ndns.poller.client` on localhost
@@ -229,9 +230,10 @@ Example #1:
 	ndns.nameserver.createResponse (req, res, root, ndns.p_type_syms);
 
 
-## ndns.poller.server.createServer ( POLL_PORT )
+## ndns.poller.server.createServer ( POLL_PORT, POLL_IP )
 This function creates a server which listens on a port (default 5000) for UDP packets from `ndns.poller.client`.
-It maintains a list of the IP addresses of the fastest webservers within a particular domain.
+It maintains a list of the IP addresses of the fastest webservers within a particular domain. The `POLL_IP` refers 
+to the interface on which the poller server is created.
 
 Example #1:
 

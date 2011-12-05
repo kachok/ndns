@@ -10,6 +10,7 @@ var p_type_syms = ndns.p_type_syms;
 
 var BIND_PORT = 53;
 var POLL_PORT = 5000;
+var POLL_IP   = "127.0.0.1"
 
 // Zone file information
 var zone = {}
@@ -48,7 +49,7 @@ ndns.nameserver.addToTree(zone, ["in","ac","lnmiit","proxy"],
 var dns_server = ndns.createServer('udp4');
 
 // Polling Server Startup
-ndns.poller.server.createServer(POLL_PORT);
+ndns.poller.server.createServer(POLL_PORT, POLL_IP);
 ndns.poller.client.startPoller('127.0.0.1', POLL_PORT, 'aiesec.in');
 
 dns_server.on("request", function(req, res) {
